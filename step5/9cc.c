@@ -237,12 +237,10 @@ int main(int argc, char **argv) {
   // アセンブリの前半部分を出力
   printf(".globl main\n");
   printf("main:\n");
-  printf("  sub sp, sp, #16\n");
 
   // 抽象構文木を下りながらコード生成
   gen(node);
 
-  printf("  add sp, sp, #16\n");
   printf("  ret\n");
   return 0;
 }
