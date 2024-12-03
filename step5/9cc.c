@@ -241,6 +241,7 @@ int main(int argc, char **argv) {
   // 抽象構文木を下りながらコード生成
   gen(node);
 
+  printf("  ldr x0, [sp], 16\n");
   printf("  ret\n");
   return 0;
 }
