@@ -29,15 +29,14 @@ void gen(Node *node) {
   case ND_LE:
     printf("  cmp x0, x1\n");
     if (node->kind == ND_EQ)
-      printf("  cset w2, eq\n");
+      printf("  cset w0, eq\n");
     else if (node->kind == ND_NE)
-      printf("  cset w2, ne\n");
+      printf("  cset w0, ne\n");
     else if (node->kind == ND_LT)
-      printf("  cset w2, lt\n");
+      printf("  cset w0, lt\n");
     else if (node->kind == ND_LE)
-      printf("  cset w2, le\n");
+      printf("  cset w0, le\n");
     
-    printf("  mov w0, w2\n");
     printf("  uxtw x0, w0\n");
     break;
   }

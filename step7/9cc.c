@@ -300,26 +300,22 @@ void gen(Node *node) {
     break;
   case ND_EQ:
     printf("  cmp x0, x1\n");
-    printf("  cset w2, eq\n");
-    printf("  mov w0, w2\n");
+    printf("  cset w0, eq\n");
     printf("  uxtw x0, w0\n");
     break;
   case ND_NE:
     printf("  cmp x0, x1\n");
-    printf("  cset w2, ne\n");
-    printf("  mov w0, w2\n");
+    printf("  cset w0, ne\n");
     printf("  uxtw x0, w0\n");
     break;
   case ND_LT:
     printf("  cmp x0, x1\n");
-    printf("  cset w2, lt\n");
-    printf("  mov w0, w2\n");
+    printf("  cset w0, lt\n");
     printf("  uxtw x0, w0\n");
     break;
   case ND_LE:
     printf("  cmp x0, x1\n");
-    printf("  cset w2, le\n");
-    printf("  mov w0, w2\n");
+    printf("  cset w0, le\n");
     printf("  uxtw x0, w0\n");
     break;
   }
