@@ -1,9 +1,19 @@
 #include "9cc.h"
 
 void gen(Node *node) {
-  if (node->kind == ND_NUM) {
+  switch (node->kind) {
+  case ND_NUM:
     printf("  mov x0,  #%d\n", node->val);
     printf("  str x0, [sp, -16]!\n");
+    return;
+  case ND_EXPR_STMT:
+    gen(node->lhs);
+    printf("  add sp, sp, #16\n");
+    return;
+  case ND_RETURN:
+    gen(node->lhs);
+    printf("  ldr x0, [sp], 16\n");
+    printf("  ret\n");
     return;
   }
   gen(node->lhs);
@@ -23,7 +33,7 @@ void gen(Node *node) {
   case ND_DIV:
     printf("  sdiv x0, x0, x1\n");
     break;
-  case ND_EQ: 
+  case ND_EQ:
   case ND_NE:
   case ND_LT:
   case ND_LE:
@@ -49,10 +59,8 @@ void codegen(Node *node) {
   printf(".globl main\n");
   printf("main:\n");
   printf("  sub sp, sp, #16\n");
-  for (Node *n = node; n; n = n->next) {
+  for (Node *n = node; n; n = n->next)
     gen(n);
-    printf("  ldr x0, [sp], 16\n");
-  }
 
   printf("  ret\n");
 }
