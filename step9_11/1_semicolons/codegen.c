@@ -42,7 +42,8 @@ void gen(Node *node)
     printf("  cmp x0, x1\n");
     printf("  cset x0, le\n");
     break;
-  }
+  } 
+  
   printf("  str x0, [sp, -16]!\n");
 }
 

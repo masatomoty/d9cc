@@ -1,25 +1,29 @@
 #include "9cc.h"
 
-Node *new_node(NodeKind kind) {
+Node *new_node(NodeKind kind)
+{
   Node *node = calloc(1, sizeof(Node));
   node->kind = kind;
   return node;
 }
 
-Node *new_binary(NodeKind kind, Node *lhs, Node *rhs) {
+Node *new_binary(NodeKind kind, Node *lhs, Node *rhs)
+{
   Node *node = new_node(kind);
   node->lhs = lhs;
   node->rhs = rhs;
   return node;
 }
 
-Node *new_num(int val) {
+Node *new_num(int val)
+{
   Node *node = new_node(ND_NUM);
   node->val = val;
   return node;
 }
 
-Node *new_unary(NodeKind kind, Node *expr) {
+Node *new_unary(NodeKind kind, Node *expr)
+{
   Node *node = new_node(kind);
   node->lhs = expr;
   return node;
@@ -35,11 +39,13 @@ Node *unary();
 Node *primary();
 
 // program = stmt*
-Node *program() {
+Node *program()
+{
   Node head;
   head.next = NULL;
   Node *cur = &head;
-  while (!at_eof()) {
+  while (!at_eof())
+  {
     cur->next = stmt();
     cur = cur->next;
   }
@@ -48,8 +54,10 @@ Node *program() {
 
 // stmt = "return" expr ";"
 //      | expr ";"
-Node *stmt() {
-  if (consume("return")) {
+Node *stmt()
+{
+  if (consume("return"))
+  {
     Node *node = new_unary(ND_RETURN, expr());
     expect(";");
     return node;
@@ -63,9 +71,11 @@ Node *stmt() {
 Node *expr() { return equality(); }
 
 // equality = relational ("==" relational | "!=" relational)*
-Node *equality() {
+Node *equality()
+{
   Node *node = relational();
-  for (;;) {
+  for (;;)
+  {
     if (consume("=="))
       node = new_binary(ND_EQ, node, relational());
     else if (consume("!="))
@@ -75,9 +85,11 @@ Node *equality() {
   }
 }
 // relational = add ("<" add | "<=" add | ">" add | ">=" add)*
-Node *relational() {
+Node *relational()
+{
   Node *node = add();
-  for (;;) {
+  for (;;)
+  {
     if (consume("<"))
       node = new_binary(ND_LT, node, add());
     else if (consume("<="))
@@ -91,9 +103,11 @@ Node *relational() {
   }
 }
 // add = mul ("+" mul | "-" mul)*
-Node *add() {
+Node *add()
+{
   Node *node = mul();
-  for (;;) {
+  for (;;)
+  {
     if (consume("+"))
       node = new_binary(ND_ADD, node, mul());
     else if (consume("-"))
@@ -103,9 +117,11 @@ Node *add() {
   }
 }
 
-Node *mul() {
+Node *mul()
+{
   Node *node = unary();
-  for (;;) {
+  for (;;)
+  {
     if (consume("*"))
       node = new_binary(ND_MUL, node, unary());
     else if (consume("/"))
@@ -116,7 +132,8 @@ Node *mul() {
 }
 
 // mul = unary ("*" unary | "/" unary)*
-Node *unary() {
+Node *unary()
+{
   if (consume("+"))
     return unary();
   if (consume("-"))
@@ -124,9 +141,11 @@ Node *unary() {
   return primary();
 }
 
-Node *primary() {
+Node *primary()
+{
   // 次のトークンが"("なら、"(" expr ")"のはず
-  if (consume("(")) {
+  if (consume("("))
+  {
     Node *node = expr();
     expect(")");
     return node;
