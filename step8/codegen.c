@@ -1,15 +1,22 @@
 #include "9cc.h"
-void gen(Node *node) {
-  if (node->kind == ND_NUM) {
+
+void gen(Node *node)
+{
+  if (node->kind == ND_NUM)
+  {
     printf("  mov x0,  #%d\n", node->val);
     printf("  str x0, [sp, -16]!\n");
     return;
   }
+
   gen(node->lhs);
   gen(node->rhs);
+
   printf("  ldr x1, [sp], 16\n");
   printf("  ldr x0, [sp], 16\n");
-  switch (node->kind) {
+
+  switch (node->kind)
+  {
   case ND_ADD:
     printf("  add x0, x0, x1\n");
     break;
@@ -22,31 +29,34 @@ void gen(Node *node) {
   case ND_DIV:
     printf("  sdiv x0, x0, x1\n");
     break;
-  case ND_EQ: 
+  case ND_EQ:
+    printf("  cmp x0, x1\n");
+    printf("  cset x0, eq\n");
+    break;
   case ND_NE:
+    printf("  cmp x0, x1\n");
+    printf("  cset x0, ne\n");
+    break;
   case ND_LT:
+    printf("  cmp x0, x1\n");
+    printf("  cset x0, lt\n");
+    break;
   case ND_LE:
     printf("  cmp x0, x1\n");
-    if (node->kind == ND_EQ)
-      printf("  cset w0, eq\n");
-    else if (node->kind == ND_NE)
-      printf("  cset w0, ne\n");
-    else if (node->kind == ND_LT)
-      printf("  cset w0, lt\n");
-    else if (node->kind == ND_LE)
-      printf("  cset w0, le\n");
-    
-    printf("  uxtw x0, w0\n");
+    printf("  cset x0, le\n");
     break;
   }
   printf("  str x0, [sp, -16]!\n");
 }
-void codegen(Node *node) {
-  // アセンブリの前半部分を出力
+
+void codegen(Node *node)
+{
   printf(".globl main\n");
   printf("main:\n");
   printf("  sub sp, sp, #16\n");
+
   gen(node);
-  printf("  add sp, sp, #16\n");
+
+  printf("  ldr x0, [sp], 16\n");
   printf("  ret\n");
 }
