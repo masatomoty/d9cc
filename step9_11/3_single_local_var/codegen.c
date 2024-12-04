@@ -54,7 +54,7 @@ void gen(Node *node)
   case ND_RETURN:
     gen(node->lhs);
     printf("  ldr x0, [sp], 16\n");
-    printf("  ret\n");
+    printf("  b .Lreturn\n");
     return;
   }
 
